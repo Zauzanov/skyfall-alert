@@ -220,6 +220,17 @@ Press **Ctrl + C** in the terminal running Docker.
 
 Data is preserved in `data/app.db`.
 
+### What happens if Docker was stopped for a while?
+#### Example: 
+1. Docker stopped for 2 days and 3 meteorite articles published during that time;
+2. When Docker starts again:
+    - those articles will appear in RSS;
+    - your bot may detect them;
+    - they will be treated as “new to the bot”;
+    - you will get notifications.
+3. So it doesn't lose events! But detection is delayed!
+4. Also we can do scheduled runs using a system scheduler (cron or Windows Task Scheduler) which is going to run scans periodically.
+
 ---
 
 ## 🔐 Security Notes
@@ -232,6 +243,8 @@ Data is preserved in `data/app.db`.
 
 ## Planned Improvements
 
+* 24/7 monitoring using VPS/cloud server — to run it on an always-on server;
+* CI/CD + DevSecOps;
 * Reduce false positives with confidence scoring
 * Ignore historical articles on first run
 * Telegram commands (`/latest`, `/stats`)

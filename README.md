@@ -139,8 +139,8 @@ The bot will send messages like:
 📅 Date: 2026-02-02
 📰 Source: https://news.example.com/...
 ```
-Message Preview:
-![Skyfall Alert – TG](docs/images/01.jpg)
+Message Preview:<br>
+<img src="docs/images/01.jpg" alt="Skyfall Alert – Telegram message" width="200">
 
 ---
 

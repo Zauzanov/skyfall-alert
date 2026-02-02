@@ -1,7 +1,3 @@
-# skyfall-alert
-Real-time alerts for astronomical impact events sourced from worldwide media.
-
-
 # ☄️ Skyfall Alert
 
 **Skyfall Alert** is a Python-based monitoring system that automatically scans global news sources for reports of **fallen meteorites**, sends **real-time Telegram notifications**, and visualizes detected events on an **interactive world map**.

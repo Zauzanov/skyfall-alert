@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Meteor Watch Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Leaflet CDN -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <style>
+    html, body { height: 100%; margin: 0; }
+    #map { height: 100%; width: 100%; }
+    .panel {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      z-index: 1000;
+      background: white;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+      max-width: 420px;
+    }
+    .small { font-size: 12px; opacity: 0.8; }
+  </style>
+</head>
+
+<body>
+  <div class="panel">
+    <div><b>☄️ Meteor Watch</b></div>
+    <div class="small">Pins appear when a city/country was extracted + geocoded.</div>
+    <div class="small">API: <code>/events</code></div>
+  </div>
+  <div id="map"></div>
+
+  <script>
+    const map = L.map('map').setView([20, 0], 2);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    async function loadEvents() {
+      const res = await fetch('/events?limit=2000');
+      const events = await res.json();
+
+      let plotted = 0;
+
+      for (const e of events) {
+        if (e.latitude == null || e.longitude == null) continue;
+
+        const locParts = [e.country, e.region, e.city].filter(Boolean);
+        const loc = locParts.length ? locParts.join(', ') : 'Unknown';
+        const date = e.published_at || (e.detected_at ? e.detected_at.slice(0, 10) : '');
+
+        const popup = `
+          <div style="font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;">
+            <div><b>${loc}</b></div>
+            <div style="font-size: 12px; opacity: 0.85;">${date}</div>
+            <div style="margin-top: 6px;">
+              <a href="${e.source_url}" target="_blank" rel="noreferrer">Source</a>
+            </div>
+            <div style="margin-top: 6px; font-size: 12px; opacity: 0.85;">
+              ${e.title || ''}
+            </div>
+          </div>
+        `;
+
+        L.marker([e.latitude, e.longitude]).addTo(map).bindPopup(popup);
+        plotted += 1;
+      }
+
+      console.log(`Loaded ${events.length} events, plotted ${plotted} markers`);
+    }
+
+    loadEvents().catch(console.error);
+  </script>
+</body>
+</html>

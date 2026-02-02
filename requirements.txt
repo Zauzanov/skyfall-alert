@@ -1,0 +1,10 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+
+requests==2.32.3
+feedparser==6.0.11
+beautifulsoup4==4.12.3
+
+python-dateutil==2.9.0.post0
+geotext==0.4.0
+pycountry==24.6.1
